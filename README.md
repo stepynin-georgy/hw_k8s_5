@@ -52,7 +52,6 @@ spec:
 2. Создать Deployment приложения _backend_ из образа multitool.
 
 ```
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
