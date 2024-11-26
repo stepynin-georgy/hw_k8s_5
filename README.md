@@ -26,9 +26,109 @@
 ### Задание 1. Создать Deployment приложений backend и frontend
 
 1. Создать Deployment приложения _frontend_ из образа nginx с количеством реплик 3 шт.
-2. Создать Deployment приложения _backend_ из образа multitool. 
-3. Добавить Service, которые обеспечат доступ к обоим приложениям внутри кластера. 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25.4
+        ports:
+        - containerPort: 80
+```
+
+2. Создать Deployment приложения _backend_ из образа multitool.
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        ports:
+        - containerPort: 8080
+        env:
+        - name: HTTP_PORT
+          value: "8080"
+```
+
+```
+user@k8s:/opt/hw_k8s_5$ microk8s kubectl get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+backend    1/1     1            1           24s
+frontend   3/3     3            3           3m24s
+```
+
+3. Добавить Service, которые обеспечат доступ к обоим приложениям внутри кластера.
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-frontend
+  namespace: default
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      name: nginx
+      port: 9001
+      targetPort: 80
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-backend
+  namespace: default
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      name: multitool
+      port: 8080
+      targetPort: 8080
+```
+
+```
+user@k8s:/opt/hw_k8s_5$ microk8s kubectl get svc
+NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes     ClusterIP   10.152.183.1     <none>        443/TCP    7d2h
+svc-backend    ClusterIP   10.152.183.36    <none>        8080/TCP   6s
+svc-frontend   ClusterIP   10.152.183.159   <none>        80/TCP     11s
+```
+
 4. Продемонстрировать, что приложения видят друг друга с помощью Service.
+
+
+
 5. Предоставить манифесты Deployment и Service в решении, а также скриншоты или вывод команды п.4.
 
 ------
