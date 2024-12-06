@@ -76,6 +76,13 @@ spec:
 ```
 
 ```
+user@k8s:/opt/hw_k8s_5$ microk8s kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+backend-6d86996bf4-s2dfp    1/1     Running   0          19s
+frontend-585bb98bfb-chjjw   1/1     Running   0          2m53s
+frontend-585bb98bfb-qsccq   1/1     Running   0          2m53s
+frontend-585bb98bfb-zkjqt   1/1     Running   0          2m53s
+
 user@k8s:/opt/hw_k8s_5$ microk8s kubectl get deployments
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
 backend    1/1     1            1           24s
@@ -88,40 +95,28 @@ frontend   3/3     3            3           3m24s
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-frontend
-  namespace: default
+  name: frontback-service
+  labels:
+    component: network2
 spec:
   selector:
-    app: frontend
+    component: network2
   ports:
     - protocol: TCP
       name: nginx
       port: 9001
       targetPort: 80
-```
-
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: svc-backend
-  namespace: default
-spec:
-  selector:
-    app: backend
-  ports:
     - protocol: TCP
       name: multitool
-      port: 8080
-      targetPort: 8080
+      port: 9002
+      targetPort: 1180
 ```
 
 ```
 user@k8s:/opt/hw_k8s_5$ microk8s kubectl get svc
-NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-kubernetes     ClusterIP   10.152.183.1     <none>        443/TCP    7d2h
-svc-backend    ClusterIP   10.152.183.36    <none>        8080/TCP   6s
-svc-frontend   ClusterIP   10.152.183.159   <none>        80/TCP     11s
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+frontback-service   ClusterIP   10.152.183.57   <none>        9001/TCP,9002/TCP   27s
+kubernetes          ClusterIP   10.152.183.1    <none>        443/TCP             16d
 ```
 
 4. Продемонстрировать, что приложения видят друг друга с помощью Service.
