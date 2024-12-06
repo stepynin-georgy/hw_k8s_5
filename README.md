@@ -154,6 +154,12 @@ backend-74d79fc7bc-vhp29:/#
 
 5. Предоставить манифесты Deployment и Service в решении, а также скриншоты или вывод команды п.4.
 
+[deployment_frontend.yaml](https://github.com/stepynin-georgy/hw_k8s_5/blob/main/deployment_frontend.yaml)
+
+[deployment_backend.yaml](https://github.com/stepynin-georgy/hw_k8s_5/blob/main/deployment_backend.yaml)
+
+[svc.yml](https://github.com/stepynin-georgy/hw_k8s_5/blob/main/svc.yml)
+
 ------
 
 ### Задание 2. Создать Ingress и обеспечить доступ к приложениям снаружи кластера
@@ -250,6 +256,8 @@ Commercial support is available at
 ```
 
 4. Предоставить манифесты и скриншоты или вывод команды п.2.
+
+[ingress.yml](https://github.com/stepynin-georgy/hw_k8s_5/blob/main/ingress.yml)
 
 ------
 
